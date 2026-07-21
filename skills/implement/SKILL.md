@@ -5,47 +5,43 @@ description: Implement a work item end to end. Use when the user provides a work
 
 # Implement
 
-Take a refined work item and drive it to a review-ready pull request: read the acceptance criteria, agree a plan, implement under TDD following the repository's own conventions, verify against the repo's gate, and open a PR linked to the item. The acceptance criteria are the contract — implement what they require and no more.
+Take a refined work item to a review-ready pull request: read the acceptance criteria, agree a plan, implement under TDD following the repo's own conventions, verify against the repo's gate, open a PR linked to the item. AC is the contract — build what it requires, no more.
 
 ## When to use
 
-Triggers:
+Triggers: user gives a work-item key and asks to implement, build, or code it.
 
-- The user provides a work-item key (e.g. `PROJ-1234`) and asks to implement, build, or code it.
-
-Do NOT use this skill to refine or shape a work item — it assumes the acceptance criteria already exist. If the item has none, stop and ask for it to be refined first.
+Not for refining/shaping an item — this assumes AC already exists. No AC? Stop, ask for it to be refined first.
 
 ## Integration
 
-This skill needs a **tracker adapter** to **read a work item by key** (its description, acceptance criteria, and links). Wherever this skill says "fetch the work item", it means "invoke that adapter." Everything else — Git, TDD, the verification gate, the PR — is tool-neutral and uses the repo's own conventions.
+Needs a **tracker adapter** to **read a work item by key** (description, AC, links). Everything else — Git, TDD, the gate, the PR — is tool-neutral, uses the repo's own conventions.
 
 ## Workflow
 
-Copy this checklist and check off each step as you go:
-
 ```
 Implement Progress:
-- [ ] 1. Read the work item → fetch it; confirm it has acceptance criteria (else stop)
-- [ ] 2. Plan               → files to touch, AC→test mapping, stated assumptions; wait for confirmation
-- [ ] 3. Branch             → fresh from the repo's default branch
-- [ ] 4. Implement          → TDD from the acceptance criteria, following repo conventions
-- [ ] 5. Verify             → run the repo's full gate; everything green
-- [ ] 6. Open a PR          → only on explicit confirmation; linked to the item
+- [ ] 1. Read the work item → confirm AC exists, else stop
+- [ ] 2. Plan               → files, AC→test mapping, assumptions; wait for confirmation
+- [ ] 3. Branch             → fresh from the default branch
+- [ ] 4. Implement          → TDD from AC, repo conventions
+- [ ] 5. Verify             → full gate, everything green
+- [ ] 6. Open a PR          → only on explicit confirmation, linked to the item
 ```
 
 ### 1. Read the work item
 
-Fetch the work item via your tracker adapter. This skill assumes the item is already refined with a description and acceptance criteria; if it has none, stop and ask for it to be refined first rather than implementing against an absent contract. Ask clarification questions only for decisions that genuinely block progress. Where something is ambiguous at the implementation level, make a reasonable decision and state it explicitly.
+Fetch via tracker adapter. No AC → stop, ask for refine first, don't implement against an absent contract. Ask only what genuinely blocks progress; state assumptions on everything else.
 
-Determine the target repository from the work item (e.g. a dedicated repository field, or stated explicitly in the description). If the item doesn't say, confirm the repository with the user before touching any file.
+Target repo comes from the item (a dedicated field, or stated in the description). Not stated? Confirm with the user before touching any file.
 
 ### 2. Plan
 
-Present a brief plan and wait for confirmation before writing any code. The plan states the target repository, the files and modules to touch, how each acceptance criterion maps to one or more tests, and any assumptions made on ambiguous points.
+Present a brief plan, wait for confirmation before writing code: target repo, files/modules to touch, AC→test mapping, assumptions on ambiguous points.
 
 ### 3. Branch
 
-Always start fresh from the repository's default branch. Follow the branch convention documented in the repo (README, `AGENTS.md`/`CLAUDE.md`); otherwise use conventional branching:
+Always fresh from the default branch. Follow the repo's documented convention (README, `AGENTS.md`/`CLAUDE.md`), or:
 
 ```bash
 git checkout <default-branch>
@@ -53,42 +49,41 @@ git fetch && git pull
 git checkout -b <type>/<KEY>-meaningful-brief-description
 ```
 
-- `<type>`: `feat`, `fix`, or `refactor` — inferred from the item type
-- Branch name is lowercase, hyphen-separated, brief but descriptive
+`<type>`: `feat`, `fix`, or `refactor`, inferred from the item type. Lowercase, hyphen-separated, brief.
 
 ### 4. Implementation
 
-Follow the repository's own conventions — `AGENTS.md`/`CLAUDE.md` and the patterns in neighbouring files. Drive the work with strict TDD from the acceptance criteria (red-green-refactor); each acceptance criterion maps to one or more tests.
+Follow the repo's own conventions — `AGENTS.md`/`CLAUDE.md`, neighbouring files. Strict TDD from AC (red-green-refactor); each AC maps to one or more tests.
 
-Before running any codegen or install command, read the repo's `AGENTS.md`/`CLAUDE.md` and `README.md` for the documented toolchain (e.g. a codegen script, a specific install command). Use that. Never improvise a workaround (e.g. a `NODE_PATH` hack, a manual `yarn install`) that bypasses the repo's own scripts — these can silently rewrite generated files or lockfiles.
+Before codegen/install, read the repo's documented toolchain and use it. Never improvise a workaround (a `NODE_PATH` hack, manual `yarn install`) — it can silently rewrite generated files or lockfiles.
 
-Code style and simplicity are governed by the repo's conventions and your agent's global guidance — do not hardcode a style checklist here.
+Style and simplicity: repo conventions + your agent's global guidance, not a checklist here.
 
 ### 5. Verify
 
-Before declaring done, run the repository's full verification gate — lint, typecheck, build, and tests. Discover the exact command from the repo's conventions (`AGENTS.md`/`CLAUDE.md`, `package.json` scripts, Makefile, or README); many repos expose a single aggregate script for this. Everything must pass. Do not open a PR on a red gate — fix and re-run.
+Run the repo's full gate — lint, typecheck, build, tests. Discover the command from the repo's own conventions. Everything passes. Red gate → fix and re-run, no PR.
 
 ### 6. Open a pull request
 
-Use your configured Git-hosting CLI adapter (e.g. `gh`, `glab`) for all remote operations — opening the PR/MR, reading comments, checking CI status. Never use WebFetch or raw API calls for these. Your `CLAUDE.md` states which CLI is your adapter.
+Use your Git-hosting CLI adapter (`gh`, `glab`) for all remote ops — never WebFetch or raw API calls.
 
-Opening a PR is an outward-facing action: with the gate green, present a summary of the diff and **wait for explicit confirmation** before opening it. Once confirmed:
+Outward-facing: present the diff with a green gate, wait for explicit confirmation. Then:
 
-- Title references the item (e.g. `<KEY>: <brief summary>`).
-- Body summarises what changed and maps the work back to the acceptance criteria.
-- Link the PR to the item per the repo/Git convention.
+- Title references the item (`<KEY>: <brief summary>`).
+- Body summarises the change, maps back to AC.
+- Link the PR to the item.
 
-Report the PR URL. This is the skill's exit point — review, merge, and deploy stay with the user.
+Report the PR URL. This is the exit point — review, merge, deploy stay with the user.
 
 ## Hard rules
 
-- **Never implement a work item with no acceptance criteria.** Stop and ask for it to be refined first.
-- **Never write code before the target repository is confirmed** — read it from the work item; if absent, confirm with the user.
-- **Never commit to the default branch.** Always work on a feature branch.
-- **Never improvise codegen/install workarounds.** Use the repo's documented toolchain (`AGENTS.md`/`CLAUDE.md`/`README.md`); never bypass it with ad hoc commands.
-- **Never declare done on a red gate.** Lint, typecheck, build, and tests must pass before a PR.
-- **Never use WebFetch/raw API for Git-hosting operations.** Use your configured CLI adapter.
-- **Never open a PR without explicit confirmation.** It is an outward-facing action.
-- **Never state a claim as verified or confirmed unless you directly inspected the evidence** (the actual file, command output, or upstream response). State assumptions explicitly as assumptions.
-- **Follow the repository's conventions over personal preference.**
-- **State every implementation-level assumption explicitly** rather than deciding silently.
+- Never implement a work item with no acceptance criteria — ask for refine first.
+- Never write code before the target repo is confirmed.
+- Never commit to the default branch.
+- Never improvise codegen/install workarounds — use the repo's documented toolchain.
+- Never declare done on a red gate.
+- Never use WebFetch/raw API for Git-hosting operations — use your CLI adapter.
+- Never open a PR without explicit confirmation.
+- Never state something verified without having directly inspected the evidence.
+- Follow the repo's conventions over personal preference.
+- State every implementation-level assumption explicitly.

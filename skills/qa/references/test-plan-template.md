@@ -24,7 +24,7 @@ Present this to the user for approval before executing anything.
 ### S1 — <short title>
 - **Covers:** AC-1
 - **Type:** happy | edge | negative | regression
-- **Preconditions:** <state/data that must exist>
+- **Setup:** <actions to execute via the system's own mechanisms to create the required state; note any fixture the user must supply>
 - **Action:** <exact request — operation + payload/params, or curl line>
 - **Expected response:** <status / fields / values>
 - **Observability check:** <what to confirm + what anomaly to rule out>
