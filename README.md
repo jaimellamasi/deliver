@@ -1,22 +1,23 @@
 # deliver
 
-Claude Code plugin. Four skills, one workflow: idea → shipped, verified change.
+Claude Code plugin. Five skills, one workflow: idea → shipped, verified change.
 Tool-agnostic — you wire your own tracker, APM, Git host via adapters.
 
 ## Workflow
 
 ```
-capture  →  refine  →  implement  →  ⟨ship: PR · review · deploy⟩  →  qa
+capture  →  refine  →  implement  →  review  →  ⟨ship: merge · deploy⟩  →  qa
 ```
 
 - **capture** — file a rough item in the backlog, fast.
 - **refine** — turn it into a spec: GIVEN/WHEN/THEN acceptance criteria + QA Setup.
 - **implement** — TDD it against the repo's own conventions, open a PR.
+- **review** — check an open MR against its item's AC and the repo's own conventions.
 - **qa** — after deploy, validate against acceptance criteria via observability.
 
-Shipping (PR → review → merge → deploy) is your own habit, not a skill.
+Shipping (merge → deploy) is your own habit, not a skill.
 
-Namespaced once installed: `/deliver:capture`, `/deliver:refine`, `/deliver:implement`, `/deliver:qa`.
+Namespaced once installed: `/deliver:capture`, `/deliver:refine`, `/deliver:implement`, `/deliver:review`, `/deliver:qa`.
 
 ## Principles
 
@@ -32,7 +33,7 @@ Namespaced once installed: `/deliver:capture`, `/deliver:refine`, `/deliver:impl
 |---|---|---|
 | Tracker | capture, refine, implement, qa | read/create/update item, resolve project metadata |
 | Observability | qa | query logs/traces/metrics, list alerts |
-| Git host CLI | implement | open PR, read comments, check CI (`gh`, `glab`) |
+| Git host CLI | implement, review | open PR, read diff/comments, check CI (`gh`, `glab`) |
 | Environment | qa | local env file with base URLs + auth tokens |
 
 Bind these in your personal `CLAUDE.md`. See each skill's `## Integration` for specifics.
