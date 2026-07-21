@@ -69,7 +69,7 @@ Use your Git-hosting CLI adapter (`gh`, `glab`) for all remote ops — never Web
 
 Outward-facing: present the diff with a green gate, wait for explicit confirmation. Then:
 
-- Title references the item (`<KEY>: <brief summary>`).
+- Title follows Conventional Commits: `<type>: <brief summary> (<KEY>)`, same `<type>` as the branch (`feat`/`fix`/`refactor`).
 - Body summarises the change, maps back to AC.
 - Link the PR to the item.
 
