@@ -87,3 +87,6 @@ Report the PR URL. This is the exit point — review, merge, deploy stay with th
 - Never state something verified without having directly inspected the evidence.
 - Follow the repo's conventions over personal preference.
 - State every implementation-level assumption explicitly.
+- Never add a comment unless it reveals a hidden intention (a non-obvious why — a constraint,
+  invariant, or workaround) that the code itself can't express. Never comment what the code
+  already says.

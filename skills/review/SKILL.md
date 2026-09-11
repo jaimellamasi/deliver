@@ -13,7 +13,9 @@ description: >-
 
 Check whether an open merge request actually does what its work item asks — no more, no less
 — using the target repo's own conventions as the bar for quality. Complements `qa` (which
-validates *deployed* behaviour): this reviews the *diff*, before merge.
+validates *deployed* behaviour): this reviews the *diff*, before merge. For a business/intent
+judgment instead of a technical one — is the AC actually clear, what scenarios aren't tested,
+should this error path truly raise — see `review-intent`.
 
 ## When to use
 
@@ -29,6 +31,14 @@ Needs two adapters:
 - **Tracker** — read a work item by key (description, acceptance criteria).
 - **Git host CLI** — read an MR's diff, description, comments, and CI status (e.g. `gh`, `glab`).
   Never use WebFetch or raw API calls for this.
+
+## References
+
+- `references/rest-principles.md` — REST checklist. Load it whenever the diff adds or modifies a
+  REST endpoint, and verify the changed endpoint(s) against it during step 4 (Assess).
+- `references/clean-code-principles.md` — clean code checklist (naming, functions, duplication,
+  complexity, etc), language-agnostic. Load it for every review and verify the diff against it
+  during step 4 (Assess).
 
 ## Core principles
 
@@ -76,6 +86,10 @@ own conventions before judging style.
 - **Test quality** — do tests assert the AC's behaviour, or just exercise the code path?
 - **Convention adherence** — does the diff follow the repo's own patterns, not a generic ideal?
 - **Correctness** — obvious bugs, edge cases the diff misses, error handling gaps.
+- **REST principles** — if the diff adds or modifies a REST endpoint, check it against
+  `references/rest-principles.md`.
+- **Clean code** — check the diff against `references/clean-code-principles.md` (naming,
+  functions, duplication, complexity).
 
 ### 5. Report
 

@@ -1,6 +1,6 @@
 {
   "name": "deliver",
-  "description": "Ticket-to-production delivery workflow skills: capture, refine, implement, review, and QA work items with evidence-grounded rigor. Tool-agnostic via configured adapters.",
+  "description": "Ticket-to-production delivery workflow skills: capture, refine, implement, review, review-intent, and QA work items with evidence-grounded rigor. Tool-agnostic via configured adapters.",
   "version": "2.3.0",
   "author": {
     "name": "Jaime Llamas"
