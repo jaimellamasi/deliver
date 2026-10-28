@@ -30,7 +30,7 @@ Needs two adapters:
 
 - **Tracker** — read a work item by key (description, acceptance criteria).
 - **Git host CLI** — read an MR's diff, description, comments, and CI status (e.g. `gh`, `glab`).
-  Never use WebFetch or raw API calls for this.
+  Never use browser tools or raw API calls for this.
 
 ## References
 
@@ -43,7 +43,7 @@ Needs two adapters:
 ## Core principles
 
 - **Grounded in the item's AC, not personal taste.** Findings trace back to what the acceptance
-  criteria require, or to the target repo's own documented conventions (`AGENTS.md`/`CLAUDE.md`,
+  criteria require, or to the target repo's own documented conventions (`AGENTS.md`,
   neighbouring code) — never to a reviewer's stylistic preference.
 - **Report, don't fix.** This skill finds and describes issues; it does not push commits to the
   branch.

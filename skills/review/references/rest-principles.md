@@ -65,5 +65,5 @@ Caveman rules. Check these when a diff adds or changes REST endpoints.
 ## Note
 
 These are defaults, not absolutes. If the target repo's own conventions
-(`AGENTS.md`/`CLAUDE.md`, neighbouring endpoints) deliberately diverge, follow the repo — flag
+(`AGENTS.md`, neighbouring endpoints) deliberately diverge, follow the repo — flag
 the divergence only if it looks accidental or inconsistent within the repo itself.

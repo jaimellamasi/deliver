@@ -82,5 +82,5 @@ Caveman rules. Check these when a diff adds or changes code, any language.
 ## Note
 
 These are defaults, not absolutes. If the target repo's own conventions
-(`AGENTS.md`/`CLAUDE.md`, neighbouring code) deliberately diverge, follow the repo — flag the
+(`AGENTS.md`, neighbouring code) deliberately diverge, follow the repo — flag the
 divergence only if it looks accidental or inconsistent within the repo itself.

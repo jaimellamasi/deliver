@@ -41,7 +41,7 @@ Present a brief plan, wait for confirmation before writing code: target repo, fi
 
 ### 3. Branch
 
-Always fresh from the default branch. Follow the repo's documented convention (README, `AGENTS.md`/`CLAUDE.md`), or:
+Always fresh from the default branch. Follow the repo's documented convention (README, `AGENTS.md`), or:
 
 ```bash
 git checkout <default-branch>
@@ -53,7 +53,7 @@ git checkout -b <type>/<KEY>-meaningful-brief-description
 
 ### 4. Implementation
 
-Follow the repo's own conventions — `AGENTS.md`/`CLAUDE.md`, neighbouring files. Strict TDD from AC (red-green-refactor); each AC maps to one or more tests.
+Follow the repo's own conventions — `AGENTS.md`, neighbouring files. Strict TDD from AC (red-green-refactor); each AC maps to one or more tests.
 
 Before codegen/install, read the repo's documented toolchain and use it. Never improvise a workaround (a `NODE_PATH` hack, manual `yarn install`) — it can silently rewrite generated files or lockfiles.
 
@@ -65,7 +65,7 @@ Run the repo's full gate — lint, typecheck, build, tests. Discover the command
 
 ### 6. Open a pull request
 
-Use your Git-hosting CLI adapter (`gh`, `glab`) for all remote ops — never WebFetch or raw API calls.
+Use your Git-hosting CLI adapter (`gh`, `glab`) for all remote ops — never browser tools or raw API calls.
 
 Outward-facing: present the diff with a green gate, wait for explicit confirmation. Then:
 
@@ -82,7 +82,7 @@ Report the PR URL. This is the exit point — review, merge, deploy stay with th
 - Never commit to the default branch.
 - Never improvise codegen/install workarounds — use the repo's documented toolchain.
 - Never declare done on a red gate.
-- Never use WebFetch/raw API for Git-hosting operations — use your CLI adapter.
+- Never use browser tools or raw API calls for Git-hosting operations — use your CLI adapter.
 - Never open a PR without explicit confirmation.
 - Never state something verified without having directly inspected the evidence.
 - Follow the repo's conventions over personal preference.

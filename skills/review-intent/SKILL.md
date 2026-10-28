@@ -32,7 +32,7 @@ before code exists, that's `refine`'s job.
 Needs two adapters, same as `review`:
 
 - **Tracker** — read a work item by key (description, acceptance criteria).
-- **Git host CLI** — read an MR's diff and description (e.g. `glab`). Never use WebFetch or raw
+- **Git host CLI** — read an MR's diff and description (e.g. `glab`). Never use browser tools or raw
   API calls for this.
 
 This skill never posts comments itself — `glab` has no draft/pending-review comment support

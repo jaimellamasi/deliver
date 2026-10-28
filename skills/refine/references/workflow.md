@@ -8,7 +8,7 @@ Fetch the item via your tracker adapter, reading its full content. Capture: summ
 
 ## 2. Read the references
 
-The user usually provides one or more URLs. Fetch each in parallel with your agent's web-fetch capability.
+The user usually provides one or more URLs. Retrieve each in parallel using available browsing tools.
 
 For vendor API docs, ask for **everything verbatim**:
 - Endpoint method, path, base URL
@@ -17,14 +17,14 @@ For vendor API docs, ask for **everything verbatim**:
 - Auth scheme: token endpoint, grant type, header format
 - Error model: status codes, error envelope shape, rate-limit headers
 
-If web-fetch returns sparse content (JS-rendered API explorers often do), say so explicitly to the user and ask them to paste the rendered content.
+If the retrieved page contains sparse content (JS-rendered API explorers often do), say so explicitly to the user and ask them to paste the rendered content.
 
 ## 3. Explore the codebase
 
 - Find the touched module(s) — wherever the affected code lives for this feature
 - Read the current adapter / port / service / domain files
 - Read existing patterns in **sibling features** to understand conventions, but DO NOT cite them in the item itself
-- Read `AGENTS.md`/`CLAUDE.md` and any in-repo design docs
+- Read `AGENTS.md` and any in-repo design docs
 - Check schema files for the persisted shape
 
 The goal is to know what changes, what stays, and what conventions to follow — without leaking those internals into the item as cross-references.
