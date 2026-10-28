@@ -20,7 +20,7 @@ Needs a **tracker adapter**:
 - **read a work item by key** — description, parent, sprint, links.
 - **update a work item** — replace description with the refined markdown.
 
-"Read the item" / "push to the tracker" means: invoke that adapter. Reference URLs are fetched via your agent's web-fetch.
+"Read the item" / "push to the tracker" means: invoke that adapter. Retrieve reference URLs using available browsing tools.
 
 ## Workflow
 
@@ -91,7 +91,7 @@ Full menu + framing language: [tradeoffs.md](references/tradeoffs.md).
 
 ## Hard rules
 
-- Never paraphrase auth/error/schema sections of vendor docs — quote verbatim. Sparse web-fetch? Ask for the rendered page or credentials.
+- Never paraphrase auth/error/schema sections of vendor docs — quote verbatim. Retrieved content sparse? Ask for the rendered page or credentials.
 - Never reference sibling items or features in the description — the item must stand alone.
 - Never put implementation details in AC. "Adds `FooAdapter` class" is wrong; "valid registration returns 201" is right.
 - Never push without explicit confirmation. Show the draft, ask "push to `<KEY>`?", wait.

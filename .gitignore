@@ -9,6 +9,6 @@
 .env
 .env.local
 
-# Skill-tooling install artifacts (not part of the plugin)
+# Local skill-tooling install artifacts
 .agents/
 skills-lock.json
