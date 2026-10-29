@@ -16,6 +16,11 @@ Validate a deployed change against its work item: set up each scenario using the
 
 ## Integration
 
+Read `$XDG_CONFIG_HOME/deliver/integrations.md` (default `~/.config/deliver/integrations.md`).
+Task choices and repository instructions override these defaults. Ask only for gaps needed
+now; preserve saved providers, accounts, and destinations. If unconfigured, offer
+`deliver-setup` or resolve the required choices for this run.
+
 Needs two adapters:
 
 - **Tracker** — read a work item by key (description, acceptance criteria, linked docs).

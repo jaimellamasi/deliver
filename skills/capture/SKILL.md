@@ -23,6 +23,11 @@ Not for a fully-fielded item with sprint/parent/links — supply those explicitl
 
 ## Integration
 
+Read `$XDG_CONFIG_HOME/deliver/integrations.md` (default `~/.config/deliver/integrations.md`).
+Task choices and repository instructions override these defaults. Ask only for gaps needed
+now; preserve saved providers, accounts, and destinations. If unconfigured, offer
+`deliver-setup` or resolve the required choices for this run.
+
 Needs a **tracker adapter**:
 
 - **create work item** — title, type, project → key + URL.
@@ -36,7 +41,7 @@ Only needs **resolve project metadata** if the user gives a sprint or parent.
 
 ## Defaults — minimal by design
 
-- **Project:** tracker default. The only pinned default.
+- **Project:** configured tracker default. The only pinned default.
 - **Type:** `Bug` if it reads like a defect, else `Task`.
 - **Everything else** (sprint, parent, repo, labels): unset → lands in backlog.
 

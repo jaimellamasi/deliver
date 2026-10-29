@@ -26,6 +26,12 @@ Not for reviewing your own uncommitted working diff — that's a separate local 
 
 ## Integration
 
+Read `$XDG_CONFIG_HOME/deliver/integrations.md` (default `~/.config/deliver/integrations.md`).
+Task choices and repository instructions override these defaults. Ask only for gaps needed
+now; preserve saved providers, accounts, and destinations. If unconfigured, offer
+`deliver-setup` or resolve the required choices for this run.
+Match Git-host bindings to the repository remote or PR/MR URL.
+
 Needs two adapters:
 
 - **Tracker** — read a work item by key (description, acceptance criteria).
