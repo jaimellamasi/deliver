@@ -55,7 +55,7 @@ git checkout -b <type>/<KEY>-meaningful-brief-description
 
 Follow the repo's own conventions — `AGENTS.md`, neighbouring files. Strict TDD from AC (red-green-refactor); each AC maps to one or more tests.
 
-Before codegen/install, read the repo's documented toolchain and use it. Never improvise a workaround (a `NODE_PATH` hack, manual `yarn install`) — it can silently rewrite generated files or lockfiles.
+Before codegen/install, read the repo's documented toolchain and use it. Never bypass the documented toolchain with an ad hoc workaround — it can silently rewrite generated files or dependency metadata.
 
 Style and simplicity: repo conventions + your agent's global guidance, not a checklist here.
 

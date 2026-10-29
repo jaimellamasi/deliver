@@ -2,7 +2,7 @@
 
 Section blocks for the work-item description. Pick what's relevant for the item — every section is optional except **Goal** and **Acceptance criteria**.
 
-The worked examples below use a fictional external-API integration — "Acme Verify", a business-registration endpoint — to illustrate each block. They are examples, not a required shape — adapt or drop blocks that don't fit the item at hand.
+The placeholders below illustrate each block without assuming a particular product, provider, or data model. Fill them with the item's actual requirements; adapt or drop blocks that don't fit.
 
 ## Goal
 
@@ -11,8 +11,7 @@ One or two sentences. State what the item changes about the running system, in t
 ```markdown
 ## Goal
 
-Create Business API so `POST /v1/business-registry/:companyId/businesses`
-actually registers the business at Acme Verify.
+<Observable change and who or what benefits.>
 ```
 
 Avoid: "implement X" (vague), "item aims to" (preamble), "as part of the epic Y" (cross-reference).
@@ -24,15 +23,12 @@ What's in, not what's out. List reference URLs verbatim — implementers will fo
 ```markdown
 ## Scope
 
-Only the Create Business endpoint:
-`POST {ACME_VERIFY_BASE_URL}/v1/business/business` →
-`200 { id, requestId, timestamp }`. Status reads, removals and enrichment
-enrollments are out of scope.
+<Included operation(s) and explicit exclusions that bound this item.>
 
 Reference:
 
-- https://developer.acme-verify.example/docs/.../create-business
-- https://developer.acme-verify.example/docs/.../authentication
+- <authoritative specification or contract URL>
+- <additional relevant reference URL, if needed>
 ```
 
 ## Domain changes
@@ -40,12 +36,10 @@ Reference:
 Type / enum / schema deltas. Mark BREAKING when changing public API contract.
 
 ```markdown
-## Domain changes (breaking — V1 endpoint contract)
+## Domain changes
 
-1. `industry` enum replaced with vendor's 21 values verbatim: `...`.
-2. `numberOfEmployees` enum replaced with vendor's 7 values verbatim: `...`.
-3. `taxId` becomes optional.
-4. `dunsNumber` becomes required. Vendor policy: _"<verbatim quote>"_ (URL).
+1. <Field, type, enum, or schema change: current shape → required shape.>
+2. <Whether the change breaks an existing contract, with the relevant source or decision.>
 ```
 
 Each item: what changes, what to. When the change is non-obvious, append the **why** as a one-line citation.
@@ -57,19 +51,13 @@ Table when integrating an external API. Verbatim field names, both sides.
 ```markdown
 ## Request payload mapping
 
-| Domain field      | Vendor field         |
-| ----------------- | -------------------- |
-| `address.line1`   | `streetAddressLine1` |
-| `address.country` | `country`            |
-| `taxId`           | `einVatNumber`       |
-
-`legalName`, `primaryName`, `industry`, `website` pass through with the
-same name.
+| Domain field | External field | Transformation, if any |
+| ------------ | -------------- | ---------------------- |
+| <field>      | <field>        | <documented mapping>   |
 
 ## Response handling
 
-- `id` → persisted as `providerBusinessRef`
-- `{ requestId, timestamp }` → persisted as `providerMetadata`
+- <External response field> → <required handling or persistence rule>
 ```
 
 ## Pre-call checks
@@ -77,13 +65,10 @@ same name.
 Local validation, dedup, idempotency rules that fire BEFORE any external call.
 
 ```markdown
-## Pre-provider duplicate checks
+## Pre-call checks
 
-1. **Same-company:** an active row exists for `(companyId, provider='acme')`
-   → 409 with reason `company_active`. Already implemented.
-2. **Cross-company identity collision:** another company has an active row
-   whose `legalName` or `primaryName` matches case-insensitively → 409 with
-   reason `identity_collision`.
+1. **<Validation or duplicate condition>:** <expected result and whether an external call is allowed>.
+2. **<Additional condition, if applicable>:** <required behavior>.
 ```
 
 ## Operational requirements
@@ -93,13 +78,11 @@ Anything that's a constraint on the implementation but not user-observable behav
 ```markdown
 ## Operational requirements
 
-- HTTP Basic auth: `Authorization: Basic base64(<APP_ID>:<APP_SECRET>)`.
+- Authentication: <required mechanism and configured credential source>.
 - Credentials never appear in logs.
-- No automatic retry on Create Business — service fee billed per registration.
-- `ACME_VERIFY_APP_ID` / `_APP_SECRET` are optional in every environment.
-  When absent, adapter logs a warning at boot and registration fails with 500.
-- On non-2xx, the vendor status code, `error.code`, and `error.errors[0].message`
-  are captured in logs against the originating `companyId`.
+- Retry policy: <agreed retry conditions, limits, and duplicate-effect handling>.
+- Configuration: <required settings and agreed behavior when they are absent>.
+- Diagnostics: <relevant failures, fields, and correlation identifiers>.
 ```
 
 This section is the home for everything that "must be true" but isn't observable through the API. If a thing belongs here, it does NOT belong in AC.
@@ -111,9 +94,7 @@ Known follow-ups that are deliberately out of scope. Flag racy / brittle bits th
 ```markdown
 ## Future work
 
-- Partial unique index on `lower(business_data->>'legalName')` in the
-  next migration. Without it, the cross-company identity check is
-  racy under concurrent registrations.
+- <Deferred improvement, its impact, and why it is separate from this item.>
 ```
 
 ## Acceptance criteria
@@ -123,38 +104,26 @@ GIVEN/WHEN/THEN scenarios, customer-observable. One scenario per behaviour. Each
 ```markdown
 ## Acceptance criteria
 
-### Scenario: Successful registration accepted by the provider
+### Scenario: <Successful operation>
 
-- **Given** no active business registration exists for the company at provider `acme`
-- **And** provider credentials are configured
-- **When** the company POSTs a valid registration
-- **And** the provider responds with `200 { id, requestId, timestamp }`
-- **Then** the API responds with 201 and a body containing the local business UUID,
-  `pending` status, and the submitted-at timestamp
-- **And** a row is persisted whose `providerBusinessRef` is the provider business `id`
-  and whose `providerMetadata` carries the provider `requestId` and `timestamp`
+- **Given** <relevant initial state>
+- **And** <required configuration or external preconditions>
+- **When** <request with the inputs that matter>
+- **Then** <contract-defined response status and body>
+- **And** <required persisted state or side effect>
 
-### Scenario: Submission missing the required DUNS number
+### Scenario: <Validation or conflict condition>
 
-- **When** the company POSTs a registration without `dunsNumber`
-- **Then** the API responds with 400
-- **And** no call is made to the provider
-
-### Scenario: Cross-company identity collision
-
-- **Given** another company has an active business registration at provider `acme`
-  whose `legalName` or `primaryName` matches case-insensitively
-- **When** the company POSTs the registration
-- **Then** the API responds with 409 and a body whose reason is `identity_collision`
-- **And** no call is made to the provider
-- **And** the response does not disclose the colliding company's identity
+- **Given** <state that triggers the condition, if needed>
+- **When** <request that exercises the condition>
+- **Then** <contract-defined response and permitted side effects>
 ```
 
 Common scenarios to cover for an integration item:
 
-- Happy path (provider 200 → API 201, persisted state)
-- Each schema-rejection case (missing required field, out-of-vocab enum)
-- Each pre-call check (same-company dup, cross-company collision)
-- Resubmission after soft-delete or rejection (allowed)
-- Provider rejection (any non-2xx → API 500, no row persisted)
-- Auth/secret guard (missing header → 401, no row, no provider call)
+- Happy path: expected response and persisted state from the agreed contract
+- Each relevant schema-rejection case
+- Each specified pre-call check
+- Repeated submissions or retries, where relevant
+- External failure or rejection, using the item's agreed error-handling policy
+- Authentication and authorization failures, where applicable

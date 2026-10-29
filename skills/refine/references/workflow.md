@@ -22,7 +22,7 @@ If the retrieved page contains sparse content (JS-rendered API explorers often d
 ## 3. Explore the codebase
 
 - Find the touched module(s) — wherever the affected code lives for this feature
-- Read the current adapter / port / service / domain files
+- Read the relevant implementation files and tests, following the repository's actual structure
 - Read existing patterns in **sibling features** to understand conventions, but DO NOT cite them in the item itself
 - Read `AGENTS.md` and any in-repo design docs
 - Check schema files for the persisted shape

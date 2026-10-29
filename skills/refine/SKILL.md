@@ -54,7 +54,7 @@ Pick what's relevant — not every item needs every section:
 - **Future work** — known follow-ups, out of scope
 - **Acceptance criteria** — GIVEN/WHEN/THEN, customer-observable only
 
-Full template + worked examples: [template.md](references/template.md).
+Full template + section prompts: [template.md](references/template.md).
 
 ## Acceptance criteria style
 
@@ -101,7 +101,7 @@ Full menu + framing language: [tradeoffs.md](references/tradeoffs.md).
 ## References
 
 - [workflow.md](references/workflow.md) — step-by-step procedure, vendor-doc extraction prompts
-- [template.md](references/template.md) — section-by-section template, worked examples
+- [template.md](references/template.md) — section-by-section template and prompts
 - [tradeoffs.md](references/tradeoffs.md) — design tradeoffs, framing language
 
 > `template.md`/`tradeoffs.md` are built around external-API integration work. For frontend, infra, or pure-domain items, keep the GIVEN/WHEN/THEN discipline, drop what doesn't apply.

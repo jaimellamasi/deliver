@@ -78,11 +78,11 @@ for step 3 — only ask the user for what it leaves unresolved (e.g. fixtures ma
 
 ### 3. Gather the test surface
 
-Check your environment adapter (e.g. a `staging.env`-style file) first for base URL(s) and auth
+Check your configured environment adapter first for base URL(s) and auth
 token(s). Combine with anything the item's QA Setup already states. Ask the user only for what's
 still missing:
 
-- **Environment**: defaults to staging — confirm the base URL from the adapter file or QA Setup;
+- **Environment**: defaults to staging — confirm the base URL from the environment adapter or QA Setup;
   only ask if neither has it.
 - **Interface**: the GraphQL/REST endpoint(s) involved. Ask for a sample query/mutation or request
   body and the auth token.

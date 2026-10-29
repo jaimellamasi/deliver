@@ -35,10 +35,8 @@ Needs two adapters, same as `review`:
 - **Git host CLI** — read an MR's diff and description (e.g. `glab`). Never use browser tools or raw
   API calls for this.
 
-This skill never posts comments itself — `glab` has no draft/pending-review comment support
-(only immediate posting), and using GitLab's raw API to work around that would break the "no raw
-API calls" rule. Confirmed findings are handed to the user as text to paste into the MR
-themselves.
+This skill never posts comments itself. Confirmed findings are handed to the user as text to
+paste into the MR themselves, regardless of the Git host's posting capabilities.
 
 Requires both a ticket and its MR — refuses to run on either alone.
 
