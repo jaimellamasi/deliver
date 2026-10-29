@@ -1,17 +1,20 @@
 ---
 name: refine
-description: Refines a work item into an implementation-ready spec with GIVEN/WHEN/THEN acceptance criteria. Use when the user provides a work-item key and asks to refine, groom, shape, draft, or "make ready" the item — typically with one or more reference URLs (vendor docs, design docs, parent epic). Output is pushed back to the same item. Requires a configured tracker adapter — see Integration.
+description: Refines an existing issue's scope and behavioral acceptance criteria. Use when the user asks to refine a ticket, clarify requirements, or draft acceptance examples before implementation.
 ---
 
 # Refine
 
-Turn a thin work item into a spec another engineer can implement with no follow-up questions: domain changes, external-system mapping, API behaviour — as GIVEN/WHEN/THEN scenarios that map straight to integration tests.
+Make one issue precise enough to implement and verify within its agreed scope. Finish with
+clear acceptance criteria and no unresolved decisions blocking implementation. For a batch,
+apply this boundary to each issue.
 
-## When to use
+## Boundaries
 
-Triggers: "refine", "groom", "shape", "draft AC", "make implementation-ready", or turning an epic stub into a sized item.
-
-Not for filing new items from scratch — this assumes an existing item.
+Clarify required behavior and scope. Read and link accepted architecture and shared contracts.
+Surface unresolved decisions affecting shared contracts, system structure, or significant
+security, reliability, or migration choices; resolve them explicitly before treating them as
+requirements. Leave local code structure, file choices, and execution planning to implementation.
 
 ## Integration
 
@@ -20,93 +23,56 @@ Task choices and repository instructions override these defaults. Ask only for g
 now; preserve saved providers, accounts, and destinations. If unconfigured, offer
 `deliver-setup` or resolve the required choices for this run.
 
-Needs a **tracker adapter**:
+Needs a tracker adapter to read the issue, comments, and linked context, and update its description.
 
-- **read a work item by key** — description, parent, sprint, links.
-- **update a work item** — replace description with the refined markdown.
+## Understand
 
-"Read the item" / "push to the tracker" means: invoke that adapter. Retrieve reference URLs using available browsing tools.
+Read the issue, relevant comments, and linked decisions. Separate accepted requirements from
+proposals and future work; surface material conflicts. Read related issues when they define
+contracts or dependencies this issue needs. Link shared sources rather than copying them.
 
-## Workflow
+Identify the actors, expected behavior, boundaries, and exclusions. Inspect repository
+instructions and existing behavior when needed to resolve a concrete ambiguity. Verify
+relevant external contracts; preserve exact agreed names and values without inventing missing
+fields or treating implementation assumptions as requirements.
 
-Iterative collaboration, not one-shot generation. Surface tradeoffs, get the user's call, push only when they say so.
+## Clarify
 
-```
-Refine Progress:
-- [ ] 1. Read the work item
-- [ ] 2. Read the references
-- [ ] 3. Explore the codebase
-- [ ] 4. Draft sections in chat (not the tracker)
-- [ ] 5. Surface tradeoffs — 1–3 per round
-- [ ] 6. Iterate — never assume agreement
-- [ ] 7. Convert AC to GIVEN/WHEN/THEN
-- [ ] 8. Push — only on explicit OK
-```
+Distinguish rules, examples illustrating them, and unanswered questions. Use representative
+examples to expose relevant failures, boundaries, authorization, concurrency, and compatibility.
+Preserve scope; recommend splits or follow-ups rather than silently restructuring the work.
 
-Step-by-step detail, extraction prompts, vocabulary-gap spotting: [workflow.md](references/workflow.md).
+Ask focused questions when answers change scope or correctness; continue refining unaffected
+behavior. An unknown expected outcome is a question. Distinguish blocking decisions from
+choices the implementer can safely make.
 
-## Output structure
+## Acceptance criteria
 
-Pick what's relevant — not every item needs every section:
+Integrate criteria into the existing issue, replacing ambiguous or redundant wording.
+Use Given/When/Then when it clarifies behavior:
 
-- **Goal** — one or two sentences
-- **Scope** — in/out, cite reference URLs verbatim
-- **Domain changes** — type/enum/schema deltas, flag breaking ones
-- **Request/response mapping** — table, when integrating an external API
-- **Pre-call checks** — validation, dedup, idempotency
-- **Operational requirements** — auth, logging, retry policy, env config
-- **QA Setup** — environment (default staging), endpoints, auth source, known fixtures; mark post-deploy-only as such
-- **Future work** — known follow-ups, out of scope
-- **Acceptance criteria** — GIVEN/WHEN/THEN, customer-observable only
+- **Given:** relevant state, actor, and preconditions.
+- **When:** one meaningful action or event.
+- **Then:** verifiable outcome, including state that must remain unchanged.
 
-Full template + section prompts: [template.md](references/template.md).
+Adapt to the issue's boundary: UI behavior, API contracts, background processing, or
+operational outcomes. Keep agreed technical and nonfunctional constraints where relevant.
+Use simple checklists or example tables when clearer; impose no scenario count or test framework.
+Leave routine implementation steps out of the criteria.
 
-## Acceptance criteria style
+Include QA setup only when useful: known environment, access references, and fixtures needed
+to verify the behavior. Flag unavailable prerequisites; never include credentials.
 
-Observable behaviour through the API — not an implementation checklist.
+## Review and deliver
 
-- One scenario per behaviour, headed `### Scenario: <short name>`
-- **Given**/**When**/**Then**/**And** bullets
-- Given = DB/external state; When = HTTP request; Then = response + persisted state
-- Logging/env vars/retry policy → Operational requirements, not AC
+Check coverage of the agreed scope, verifiable outcomes, and compatibility with linked
+contracts. Keep the issue concise; do not require a fixed template or claim that examples
+have passed tests.
 
-```markdown
-### Scenario: <short name>
+Show the draft and obtain confirmation before updating the tracker. Before writing, fetch
+the latest description and preserve unrelated content and metadata. Prefer targeted edits;
+if the adapter requires replacing the body, merge changes into the latest version. Read back
+the result; inspect an ambiguous write before retrying.
 
-- **Given** <DB / external state>
-- **When** <HTTP request>
-- **Then** <HTTP response status + body>
-- **And** <persisted state>
-```
-
-Can't express it as Given/When/Then through the public API? It's probably Operational requirements.
-
-## Tradeoffs to surface
-
-Don't lock big calls unilaterally:
-
-- Pass external errors through, or collapse to 5xx?
-- Adopt vendor enum names directly, or maintain a translation map?
-- Tighten our schema, or let the provider reject?
-- Local dedup check, or rely on provider 409?
-- Env config required everywhere, or optional?
-- Defer or include: status reads, reconciliation, retries?
-
-Full menu + framing language: [tradeoffs.md](references/tradeoffs.md).
-
-## Hard rules
-
-- Never paraphrase auth/error/schema sections of vendor docs — quote verbatim. Retrieved content sparse? Ask for the rendered page or credentials.
-- Never reference sibling items or features in the description — the item must stand alone.
-- Never put implementation details in AC. "Adds `FooAdapter` class" is wrong; "valid registration returns 201" is right.
-- Never push without explicit confirmation. Show the draft, ask "push to `<KEY>`?", wait.
-- Never invent fields or behaviour. Vendor docs silent? Flag as open, or ask.
-- Never state something verified without having directly checked it.
-
-## References
-
-- [workflow.md](references/workflow.md) — step-by-step procedure, vendor-doc extraction prompts
-- [template.md](references/template.md) — section-by-section template and prompts
-- [tradeoffs.md](references/tradeoffs.md) — design tradeoffs, framing language
-
-> `template.md`/`tradeoffs.md` are built around external-API integration work. For frontend, infra, or pure-domain items, keep the GIVEN/WHEN/THEN discipline, drop what doesn't apply.
+Report the draft or updated issue link and any blocking questions. Do not claim readiness
+while a blocking decision remains unresolved.

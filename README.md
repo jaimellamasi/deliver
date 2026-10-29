@@ -10,13 +10,18 @@ capture  →  refine  →  implement  →  ⟨open PR⟩  →  review  →  ⟨m
 ```
 
 - **capture** — file a rough item in the backlog, fast.
-- **refine** — turn it into a spec: GIVEN/WHEN/THEN acceptance criteria + QA Setup.
+- **refine** — clarify one issue's scope and verifiable acceptance criteria.
 - **implement** — implement one issue, review the diff, and pass the repo's verification gate.
 - **review** — check an open MR against its item's AC and the repo's own conventions.
 - **review-intent** — complement review by checking whether an MR solves the right business problem.
 - **qa** — after deploy, validate against acceptance criteria via observability.
 
 Opening a PR and shipping (merge → deploy) remain separate from implementation.
+
+Capture records the idea. Architecture resolves significant
+technical decisions when needed; link those decisions from affected issues. Refinement defines
+required behavior and scope; implementation owns local planning, code, and verification.
+Revisit decisions as you learn rather than requiring every issue to pass through every activity.
 
 ## Parallel implementation
 
