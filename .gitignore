@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Editor / OS cruft
+*.swp
+*~
+
+# Environment
+.env
+.env.local
+
+# Local skill-tooling install artifacts
+.agents/
+skills-lock.json
