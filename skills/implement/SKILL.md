@@ -1,17 +1,18 @@
 ---
 name: implement
-description: Implement a work item end to end. Use when the user provides a work-item key and wants it implemented. Fetches the item, understands the acceptance criteria, drives TDD implementation following repo conventions, verifies against the repo's gate, and opens a PR linked to the item. Requires a configured tracker adapter — see Integration.
+description: Implements a scoped ticket or work item. Use when the user asks to implement, build, or code an existing issue.
 ---
 
 # Implement
 
-Take a refined work item to a review-ready pull request: read the acceptance criteria, agree a plan, implement under TDD following the repo's own conventions, verify against the repo's gate, open a PR linked to the item. AC is the contract — build what it requires, no more.
+Implement one issue within its agreed scope. Finish with the required behavior implemented,
+the final diff reviewed, and the repository's verification gate green.
 
-## When to use
+## Simplicity first
 
-Triggers: user gives a work-item key and asks to implement, build, or code it.
-
-Not for refining/shaping an item — this assumes AC already exists. No AC? Stop, ask for it to be refined first.
+Choose the simplest complete solution. Reuse existing patterns; add abstractions only for
+a concrete need. Judge simplicity across the whole flow, including indirection and external
+calls. Remove obsolete code and scaffolding left by earlier approaches.
 
 ## Integration
 
@@ -19,80 +20,46 @@ Read `$XDG_CONFIG_HOME/deliver/integrations.md` (default `~/.config/deliver/inte
 Task choices and repository instructions override these defaults. Ask only for gaps needed
 now; preserve saved providers, accounts, and destinations. If unconfigured, offer
 `deliver-setup` or resolve the required choices for this run.
-Match Git-host bindings to the repository remote or PR/MR URL.
 
-Needs a **tracker adapter** to **read a work item by key** (description, AC, links). Everything else — Git, TDD, the gate, the PR — is tool-neutral, uses the repo's own conventions.
+Needs a tracker adapter to read the issue, comments, and linked context.
 
-## Workflow
+## Understand
 
-```
-Implement Progress:
-- [ ] 1. Read the work item → confirm AC exists, else stop
-- [ ] 2. Plan               → files, AC→test mapping, assumptions; wait for confirmation
-- [ ] 3. Branch             → fresh from the default branch
-- [ ] 4. Implement          → TDD from AC, repo conventions
-- [ ] 5. Verify             → full gate, everything green
-- [ ] 6. Open a PR          → only on explicit confirmation, linked to the item
-```
+Read the issue, relevant comments, architecture, and shared contracts. Read related tickets
+only when they define behavior or contracts this implementation depends on. Separate accepted
+decisions from proposals; preserve agreed scope.
 
-### 1. Read the work item
+Use the current Git working tree unless the issue or user identifies another repository.
+Resolve conflicting or unclear targets before editing. Use the assigned checkout/worktree
+and preserve unrelated work.
 
-Fetch via tracker adapter. No AC → stop, ask for refine first, don't implement against an absent contract. Ask only what genuinely blocks progress; state assumptions on everything else.
+Read repository instructions, trace the affected entry point, and inspect a comparable
+feature and its tests. Reuse established models, validation, and error handling.
 
-Target repo comes from the item (a dedicated field, or stated in the description). Not stated? Confirm with the user before touching any file.
+Missing or unclear acceptance criteria: ask only about decisions affecting scope or
+correctness, and continue unaffected work. Never invent required behavior.
 
-### 2. Plan
+## Plan
 
-Present a brief plan, wait for confirmation before writing code: target repo, files/modules to touch, AC→test mapping, assumptions on ambiguous points.
+Before editing, briefly state the behavior, affected files, acceptance-criteria coverage,
+verification commands, and material assumptions. Reuse an agreed plan; follow repository
+planning conventions. Pause for unresolved scope or design decisions, or when the user
+requests plan approval.
 
-### 3. Branch
+## Implement
 
-Always fresh from the default branch. Follow the repo's documented convention (README, `AGENTS.md`), or:
+Follow repository conventions and the documented toolchain for setup, installs, and codegen.
+Explain material departures from existing architecture before introducing them.
 
-```bash
-git checkout <default-branch>
-git fetch && git pull
-git checkout -b <type>/<KEY>-meaningful-brief-description
-```
+For behavior changes, use small red–green–refactor cycles. Confirm the failing test exposes
+the intended missing behavior, then make the simplest change that passes. Cover acceptance
+criteria with meaningful behavior tests, reusing existing fixtures and coverage; no fixed
+test count per criterion.
 
-`<type>`: `feat`, `fix`, or `refactor`, inferred from the item type. Lowercase, hyphen-separated, brief.
+## Review and verify
 
-### 4. Implementation
+Review the final diff and follow the repository's required review process. Fix actionable
+findings, then run the required package/repository gate on the final code. Confirm checks
+actually ran; failed or unavailable required checks mean the work is incomplete.
 
-Follow the repo's own conventions — `AGENTS.md`, neighbouring files. Strict TDD from AC (red-green-refactor); each AC maps to one or more tests.
-
-Before codegen/install, read the repo's documented toolchain and use it. Never bypass the documented toolchain with an ad hoc workaround — it can silently rewrite generated files or dependency metadata.
-
-Style and simplicity: repo conventions + your agent's global guidance, not a checklist here.
-
-### 5. Verify
-
-Run the repo's full gate — lint, typecheck, build, tests. Discover the command from the repo's own conventions. Everything passes. Red gate → fix and re-run, no PR.
-
-### 6. Open a pull request
-
-Use your Git-hosting CLI adapter (`gh`, `glab`) for all remote ops — never browser tools or raw API calls.
-
-Outward-facing: present the diff with a green gate, wait for explicit confirmation. Then:
-
-- Title follows Conventional Commits: `<type>: <brief summary> (<KEY>)`, same `<type>` as the branch (`feat`/`fix`/`refactor`).
-- Body summarises the change, maps back to AC.
-- Link the PR to the item.
-
-Report the PR URL. This is the exit point — review, merge, deploy stay with the user.
-
-## Hard rules
-
-- Never implement a work item with no acceptance criteria — ask for refine first.
-- Never write code before the target repo is confirmed.
-- Never commit to the default branch.
-- Never improvise codegen/install workarounds — use the repo's documented toolchain.
-- Never declare done on a red gate.
-- Never use browser tools or raw API calls for Git-hosting operations — use your CLI adapter.
-- Never open a PR without explicit confirmation.
-- Never state something verified without having directly inspected the evidence.
-- Follow the repo's conventions over personal preference.
-- State every implementation-level assumption explicitly.
-- Never add a comment unless it reveals a hidden intention (a non-obvious why — a constraint,
-  invariant, or workaround) that the code itself can't express. Never comment what the code
-  already says.
+Finish with a short account of the change, checks and results, and any remaining blockers.

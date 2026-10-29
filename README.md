@@ -6,17 +6,25 @@ Choose your tracker, APM, and Git host once with `deliver-setup`; keep those cho
 ## Workflow
 
 ```
-capture  →  refine  →  implement  →  review  →  ⟨ship: merge · deploy⟩  →  qa
+capture  →  refine  →  implement  →  ⟨open PR⟩  →  review  →  ⟨merge · deploy⟩  →  qa
 ```
 
 - **capture** — file a rough item in the backlog, fast.
 - **refine** — turn it into a spec: GIVEN/WHEN/THEN acceptance criteria + QA Setup.
-- **implement** — TDD it against the repo's own conventions, open a PR.
+- **implement** — implement one issue, review the diff, and pass the repo's verification gate.
 - **review** — check an open MR against its item's AC and the repo's own conventions.
 - **review-intent** — complement review by checking whether an MR solves the right business problem.
 - **qa** — after deploy, validate against acceptance criteria via observability.
 
-Shipping (merge → deploy) is your own habit, not a skill.
+Opening a PR and shipping (merge → deploy) remain separate from implementation.
+
+## Parallel implementation
+
+Give each concurrent issue its own checkout/worktree. Prefer your agent's native worktree
+support and reuse an existing task workspace. For a new independent issue, start from the
+freshly fetched default branch unless another base is specified. Preserve the base and changes
+when continuing an existing task. Keep directory placement, setup, and cleanup in your agent
+or repository workflow; `implement` uses the workspace assigned to it.
 
 ## Principles
 
@@ -32,7 +40,7 @@ Shipping (merge → deploy) is your own habit, not a skill.
 |---|---|---|
 | Tracker | capture, refine, implement, review, review-intent, qa | read/create/update item, resolve project metadata |
 | Observability | qa | query logs/traces/metrics, list alerts |
-| Git host CLI | implement, review, review-intent | open PR, read diff/comments, check CI (`gh`, `glab`) |
+| Git host CLI | review, review-intent | read PR/MR diff/comments, check CI (`gh`, `glab`) |
 | Environment | qa | references for base URLs and authentication |
 
 An adapter is a binding to an existing connector, MCP tool, or CLI; no adapter code is required.
